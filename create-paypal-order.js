@@ -1,5 +1,3 @@
-// File: /api/create-paypal-order.js
-
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
       return res.status(405).send({ message: 'Only POST requests allowed' });
@@ -9,7 +7,7 @@ export default async function handler(req, res) {
   
     const clientId = process.env.PAYPAL_CLIENT_ID;
     const secret = process.env.PAYPAL_SECRET;
-    const base = 'https://api-m.sandbox.paypal.com'; // Use live URL for production
+    const base = 'https://api-m.sandbox.paypal.com'; // Use live for production
   
     const auth = Buffer.from(`${clientId}:${secret}`).toString('base64');
   
@@ -18,7 +16,7 @@ export default async function handler(req, res) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Basic ${auth}`,
+          Authorization: `Basic ${auth}`,
         },
         body: JSON.stringify({
           intent: 'CAPTURE',
@@ -31,26 +29,31 @@ export default async function handler(req, res) {
             },
           ],
           application_context: {
-            return_url: `https://willsecret.vercel.app/paypal-success?user_id=${userId}`,
-            cancel_url: `https://willsecret.vercel.app/paypal-cancel`,
+            return_url: `https://willsecret.vercel.app/settings`,
+            cancel_url: `https://willsecret.vercel.app/settings`,
           },
         }),
       });
   
       const text = await response.text();
-      console.log('PayPal Raw Response:', text);
+      console.log('PayPal API Status:', response.status);
+      console.log('PayPal API Response:', text);
+  
+      if (!response.ok) {
+        return res.status(response.status).json({ error: 'PayPal API error', message: text });
+      }
   
       const data = JSON.parse(text);
       const approvalLink = data.links?.find((link) => link.rel === 'approve');
   
       if (!approvalLink) {
-        return res.status(500).json({ error: 'Approval link not found', raw: data });
+        return res.status(500).json({ error: 'Approval link not found', data });
       }
   
       return res.status(200).json({ approvalUrl: approvalLink.href });
-    } catch (e) {
-      console.error('Error creating PayPal order:', e.message);
-      return res.status(500).json({ error: 'Internal Server Error', message: e.message });
+    } catch (err) {
+      console.error('PayPal Order Creation Error:', err);
+      return res.status(500).json({ error: 'Internal Server Error', message: err.message });
     }
   }
   
