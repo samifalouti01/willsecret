@@ -207,11 +207,6 @@ export default function CreateWill() {
     <div className="create-will-container">
       <h2 className="create-will-title">Create Digital Will</h2>
       
-      {notification.show && (
-        <div className={`notification ${notification.type}`}>
-          {notification.message}
-        </div>
-      )}
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -254,7 +249,7 @@ export default function CreateWill() {
           
           <div className="form-group">
             <label htmlFor="content" className="form-group-label">
-              Message Content <span className="required">*</span>
+              Content <span className="required">*</span>
             </label>
             <textarea
               id="content"
@@ -262,7 +257,7 @@ export default function CreateWill() {
               value={form.content}
               onChange={handleChange}
               rows={6}
-              placeholder="Type your message here..."
+              placeholder="Type your content here..."
               className="form-textarea"
               required
             />
@@ -367,7 +362,7 @@ export default function CreateWill() {
                 onChange={handleChange}
                 placeholder="+1 (123) 456-7890"
                 className="form-input-field"
-              />
+                />
             </div>
           </div>
           
@@ -427,6 +422,11 @@ export default function CreateWill() {
             {isSubmitting ? 'Saving...' : 'Save Digital Will'}
           </button>
         </div>
+      {notification.show && (
+        <div className={`notification ${notification.type}`}>
+          {notification.message}
+        </div>
+      )}
       </form>
     </div>
   );

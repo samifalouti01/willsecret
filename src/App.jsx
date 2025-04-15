@@ -2,16 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from './supabaseClient';
 import Dashboard from './pages/Dashboard';
 import CreateWill from './pages/CreateWill';
+import Settings from './pages/Settings';
+import ForgotPassword from './pages/ForgotPassword';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { FaEnvelope, FaSignOutAlt, FaPlusCircle, FaList } from 'react-icons/fa';
 import './App.css';
 
 function App() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState('create');
+  const [view, setView] = useState('list');
   const [email, setEmail] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [notification, setNotification] = useState({ show: false, message: '', type: '' });
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function checkSession() {
@@ -24,24 +28,18 @@ function App() {
         setSession(session);
       });
     }
-    
     checkSession();
   }, []);
 
   const signIn = async (e) => {
     e.preventDefault();
     setIsLoggingIn(true);
-    
     try {
-      const { error } = await supabase.auth.signInWithOtp({ 
+      const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: {
-          emailRedirectTo: window.location.origin
-        }
+        options: { emailRedirectTo: window.location.origin }
       });
-      
       if (error) throw error;
-      
       showNotification('Magic link sent! Check your email inbox.', 'success');
       setEmail('');
     } catch (error) {
@@ -54,6 +52,7 @@ function App() {
   const signOut = async () => {
     await supabase.auth.signOut();
     setSession(null);
+    navigate('/');
   };
 
   const showNotification = (message, type) => {
@@ -81,13 +80,11 @@ function App() {
             <h1 className="login-title">Digital Will</h1>
             <p className="login-subtitle">Secure your digital legacy for loved ones</p>
           </div>
-          
           {notification.show && (
             <div className={`notification ${notification.type}`}>
               {notification.message}
             </div>
           )}
-
           <form onSubmit={signIn} className="login-form">
             <div>
               <label htmlFor="email" className="form-label">
@@ -103,7 +100,6 @@ function App() {
                 className="form-input"
               />
             </div>
-            
             <button
               type="submit"
               disabled={isLoggingIn}
@@ -122,9 +118,8 @@ function App() {
               )}
             </button>
           </form>
-          
           <div className="login-footer">
-            We'll send you a magic link to your email
+            <Link to="/forgot-password">Forgot Password?</Link>
           </div>
         </div>
       </div>
@@ -136,18 +131,16 @@ function App() {
       <header className="header">
         <div className="header-content">
           <div className="header-inner">
-            <div className="flex items-center">
-              <h1 className="header-title">Digital Will</h1>
+            <div className="logo-container">
+              <img src="logo.png" alt="logo" className="logo" />
+              <h1 className="header-title">Will Secret</h1>
             </div>
-            
             <div className="header-user">
-              <span className="header-email">
-                {session.user.email}
-              </span>
-              <button
-                onClick={signOut}
-                className="logout-button"
-              >
+              <span className="header-email">{session.user.email}</span>
+              <Link to="/settings" className="settings-link">
+                Settings
+              </Link>
+              <button onClick={signOut} className="logout-button">
                 <FaSignOutAlt size={18} className="mr-1" />
                 <span>Logout</span>
               </button>
@@ -155,32 +148,40 @@ function App() {
           </div>
         </div>
       </header>
-
       <main className="main-content">
-        <div className="view-controls">
-          <h2 className="view-controls-header">
-            {view === 'create' ? 'Create New Digital Will' : 'Your Digital Wills'}
-          </h2>
-          
-          <div className="view-controls-buttons">
-            <button
-              onClick={() => setView('create')}
-              className={`view-button ${view === 'create' ? 'create-active' : 'create-inactive'}`}
-            >
-              <FaPlusCircle size={18} className="mr-1" />
-              Create New
-            </button>
-            <button
-              onClick={() => setView('list')}
-              className={`view-button ${view === 'list' ? 'list-active' : 'list-inactive'}`}
-            >
-              <FaList size={18} className="mr-1" />
-              View All
-            </button>
-          </div>
-        </div>
-
-        {view === 'create' ? <CreateWill /> : <Dashboard />}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <div className="view-controls">
+                  <h2 className="view-controls-header">
+                    {view === 'create' ? 'Create New Digital Will' : 'Your Digital Wills'}
+                  </h2>
+                  <div className="view-controls-buttons">
+                    <button
+                      onClick={() => setView('create')}
+                      className={`view-button ${view === 'create' ? 'create-active' : 'create-inactive'}`}
+                    >
+                      <FaPlusCircle size={18} className="mr-1" />
+                      Create New
+                    </button>
+                    <button
+                      onClick={() => setView('list')}
+                      className={`view-button ${view === 'list' ? 'list-active' : 'list-inactive'}`}
+                    >
+                      <FaList size={18} className="mr-1" />
+                      View All
+                    </button>
+                  </div>
+                </div>
+                {view === 'create' ? <CreateWill /> : <Dashboard />}
+              </>
+            }
+          />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+        </Routes>
       </main>
     </div>
   );

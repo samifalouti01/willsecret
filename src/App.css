@@ -39,7 +39,7 @@ body {
 .header-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #4f46e5;
+  color: #5271ff;
 }
 
 .header-user {
@@ -51,6 +51,17 @@ body {
   font-size: 0.875rem;
   color: #4b5563;
   margin-right: 1rem;
+}
+
+.header img {
+  width: 40px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 0.5rem;
 }
 
 @media (max-width: 640px) {
@@ -747,10 +758,9 @@ body {
 }
 
 .card-icon {
-  background-color: #e0e7ff;
-  padding: 0.5rem;
-  border-radius: 50%;
+  border-radius: 100px;
   margin-right: 0.75rem;
+  color: #4f46e5;
 }
 
 .card-title {
@@ -1121,4 +1131,109 @@ body {
 
 .modal-close-button:hover {
   background-color: #4338ca;
+}
+
+.settings-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.settings-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.settings-section {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.password-form {
+  max-width: 400px;
+}
+
+.billing-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.toggle-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+}
+
+.toggle-button.active {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.plan-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.plan-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.plan-wills {
+  color: #4b5563;
+  margin-bottom: 0.5rem;
+}
+
+.plan-price {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.plan-button {
+  width: 100%;
+  padding: 0.5rem;
+  background: #2563eb;
+  color: white;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.plan-button.active {
+  background: #16a34a;
+}
+
+.back-to-login {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #2563eb;
+  margin-top: 1rem;
 }
